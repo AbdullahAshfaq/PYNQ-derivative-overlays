@@ -1,6 +1,6 @@
 
 ################################################################
-# This is a generated script based on design: system
+# This is a generated script based on design: bare
 #
 # Though there are limitations about the generated script,
 # the main purpose of this utility is to make learning
@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2018.2
+set scripts_vivado_version 2018.3
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -35,7 +35,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 ################################################################
 
 # To test this script, run the following commands from Vivado Tcl console:
-# source system_script.tcl
+# source bare.tcl
 
 # If there is no project opened, this script will create a
 # project, but make sure you do not have an existing project
@@ -122,7 +122,6 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-xilinx.com:ip:xlconstant:1.1\
 xilinx.com:ip:processing_system7:5.5\
 xilinx.com:ip:proc_sys_reset:5.0\
 xilinx.com:ip:xlconcat:2.1\
@@ -193,12 +192,6 @@ proc create_root_design { parentCell } {
   set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
 
   # Create ports
-
-  # Create instance: constant0, and set properties
-  set constant0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 constant0 ]
-  set_property -dict [ list \
-   CONFIG.CONST_VAL {0} \
- ] $constant0
 
   # Create instance: ps7_0, and set properties
   set ps7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7_0 ]
@@ -1086,7 +1079,6 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net ps7_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins ps7_0/FIXED_IO]
 
   # Create port connections
-  connect_bd_net -net constant0_dout [get_bd_pins constant0/dout] [get_bd_pins xlconcat_0/In0]
   connect_bd_net -net ps7_0_FCLK_CLK0 [get_bd_pins ps7_0/FCLK_CLK0] [get_bd_pins rst_ps7_0_fclk0/slowest_sync_clk]
   connect_bd_net -net ps7_0_FCLK_CLK1 [get_bd_pins ps7_0/FCLK_CLK1] [get_bd_pins rst_ps7_0_fclk1/slowest_sync_clk]
   connect_bd_net -net ps7_0_FCLK_CLK2 [get_bd_pins ps7_0/FCLK_CLK2] [get_bd_pins rst_ps7_0_fclk2/slowest_sync_clk]
@@ -1100,6 +1092,7 @@ proc create_root_design { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
+  validate_bd_design
   save_bd_design
 }
 # End of create_root_design()
@@ -1110,5 +1103,3 @@ proc create_root_design { parentCell } {
 ##################################################################
 
 create_root_design ""
-
-
